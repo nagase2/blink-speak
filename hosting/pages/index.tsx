@@ -241,11 +241,11 @@ export default function IndexPage() {
       {/* <Stack direction="row" spacing={2}>
         <Grid container >
           <Grid item xs={8}> */}
-      <Paper sx={{ padding: "20px" }}>
-        <Grid item xs={12} sm={6}>
-          <Container maxWidth="md">
-            <Grid container spacing={2}>
 
+      <Grid item sx={{ padding: "30px" }} xs={12} sm={6}>
+        <Container maxWidth="md">
+          <Grid container spacing={2}>
+            <Grid container spacing={1}>
               <Grid item xs={3} sm={3}>
                 <StaticCard title="今日の回答数" contents="23/234位" />
               </Grid>
@@ -255,90 +255,94 @@ export default function IndexPage() {
               <Grid item xs={3} sm={3}>
                 <StaticCard title="これまでの回答数" contents="23/234位" />
               </Grid>
-
-              <Grid item xs={12} sm={12}>
-                <Chip color="default" size="small" label="level1" />{" "}
-                <Chip color="default" size="small" label="missed > 10" />
+              <Grid item xs={3} sm={3}>
+                <StaticCard title="これまでの回答数" contents="23/234位" />
               </Grid>
+            </Grid>
+            <Grid item xs={12} sm={12}>
+              <Chip color="default" size="small" label="TOEIC 400" />{" "}
+              <Chip color="default" size="small" label="一般" />{" "}
+              <Chip color="default" size="small" label="IT" />
+            </Grid>
 
-              <Grid item xs={12} sm={12}>
-                <Box sx={{
-                  // display: 'flex',
-                  // alignItems: 'center',
-                  // justifyContent: 'center',
-                  //  height: "30px"
+            <Grid item xs={12} sm={12}>
+              <Box sx={{
+                // display: 'flex',
+                // alignItems: 'center',
+                // justifyContent: 'center',
+                //  height: "30px"
+              }}>
+                <Typography sx={{ fontSize: "20px" }}>
+                  {
+                    // FIXME: LoadingIconに変える
+                    isQuestionLoading ? <Skeleton variant="text" sx={{ fontSize: '1.3rem' }} /> :
+                      getCurrentQuestion() ? getCurrentQuestion().contents : ""
+                  }
+                </Typography>
+              </Box>
+            </Grid>
+            <Grid item xs={12} sm={12}>
+              <Paper
+                component="form"
+                sx={{
+                  p: '2px 4px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  border: "1px solid",
+                  borderColor: "grey.300",
+                  position: 'relative', // Make this a positioning context for absolute positioning
+                  //boxShadow: '0px 3px 10px 6px rgba(0, 0, 0, 0.2)',
                 }}>
-                  <Typography sx={{ fontSize: "20px" }}>
-                    {
-                      // FIXME: LoadingIconに変える
-                      isQuestionLoading ? <Skeleton variant="text" sx={{ fontSize: '1.3rem' }} /> :
-                        getCurrentQuestion() ? getCurrentQuestion().contents : ""
-                    }
-                  </Typography>
-                </Box>
-              </Grid>
-              <Grid item xs={12} sm={12}>
-                <Paper
-                  component="form"
+                <InputBase
+                  id="MessageInputBox"
                   sx={{
-                    p: '2px 4px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    border: "1px solid",
-                    borderColor: "grey.300",
-                    position: 'relative', // Make this a positioning context for absolute positioning
-                    //boxShadow: '0px 3px 10px 6px rgba(0, 0, 0, 0.2)',
-                  }}>
-                  <InputBase
-                    id="MessageInputBox"
-                    sx={{
-                      ml: 1,
-                      flex: 1,
-                      minHeight: '38px',
+                    ml: 1,
+                    flex: 1,
+                    minHeight: '38px',
 
-                    }}
-                    value={answer}
-                    onChange={(e) => setAnswer(e.target.value)}
-                    className={shake ? 'shake-animation' : ''}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter") {
-                        e.preventDefault(); // Enterキーでの自動送信を防ぐ
-                        handleAnswerClick(); // Enterキーが押されたときに呼び出す関数
+                  }}
+                  value={answer}
+                  onChange={(e) => setAnswer(e.target.value)}
+                  className={shake ? 'shake-animation' : ''}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      e.preventDefault(); // Enterキーでの自動送信を防ぐ
+                      handleAnswerClick(); // Enterキーが押されたときに呼び出す関数
+                    }
+                  }}
+                // placeholder={placeholder}
+                // value={messageInputBoxValue} // 追加 FIXME: 名前修正必要
+                // onChange={onChange} // 追加  FIXME: 名前修正必要
+                // onKeyDown={onKeyDown} // FIXME: 名前修正必要
+                // onCompositionStart={onCompositionStart}
+                // onCompositionEnd={onCompositionEnd}
+                // multiline
+                // maxRows={10}
+                // inputRef={inputElement}
+
+                />
+                <Stack direction="row" justifyContent="space-around" alignItems="stretch" spacing={0.5} sx={{ position: 'absolute', bottom: 0, right: 2 }}>
+                  <Tooltip title={`音声で入力`} arrow>
+                    <IconButton
+                      id="messageSubmitButton"
+                      color="primary"
+                      sx={{ position: 'relative', bottom: 0 }}
+                      aria-label="messages"
+                      onClick={handleRecodringButton}
+                    >
+                      {recordingStatus === "STOPPED" ? (
+                        <MicIcon />
+                      ) :
+                        recordingStatus === "RECORDING" ? <StopCircleIcon />
+                          :
+                          recordingStatus === "LOADING" ? <CircularProgress size={20} /> : ""
                       }
-                    }}
-                  // placeholder={placeholder}
-                  // value={messageInputBoxValue} // 追加 FIXME: 名前修正必要
-                  // onChange={onChange} // 追加  FIXME: 名前修正必要
-                  // onKeyDown={onKeyDown} // FIXME: 名前修正必要
-                  // onCompositionStart={onCompositionStart}
-                  // onCompositionEnd={onCompositionEnd}
-                  // multiline
-                  // maxRows={10}
-                  // inputRef={inputElement}
+                    </IconButton>
+                  </Tooltip>
+                </Stack>
+              </Paper>
 
-                  />
-                  <Stack direction="row" justifyContent="space-around" alignItems="stretch" spacing={0.5} sx={{ position: 'absolute', bottom: 0, right: 2 }}>
-                    <Tooltip title={`音声で入力`} arrow>
-                      <IconButton
-                        id="messageSubmitButton"
-                        color="primary"
-                        sx={{ position: 'relative', bottom: 0 }}
-                        aria-label="messages"
-                        onClick={handleRecodringButton}
-                      >
-                        {recordingStatus === "STOPPED" ? (
-                          <MicIcon />
-                        ) :
-                          recordingStatus === "RECORDING" ? <StopCircleIcon />
-                            :
-                            recordingStatus === "LOADING" ? <CircularProgress size={20} /> : ""
-                        }
-                      </IconButton>
-                    </Tooltip>
-                  </Stack>
-                </Paper>
-
-                {/* <TextField
+              {/* <TextField
                   fullWidth
                   sx={{ maxWidth: "md" }}
                   id="outlined-basic"
@@ -357,12 +361,12 @@ export default function IndexPage() {
                     }
                   }}
                 /> */}
-              </Grid>
-              <Grid item xs={12} sm={12}>
-                <Button variant="contained" onClick={handleAnswerClick} >
-                  回答＆次の質問へ
-                </Button>
-                {/* {recording ?
+            </Grid>
+            <Grid item xs={12} sm={12}>
+              <Button variant="contained" onClick={handleAnswerClick} >
+                回答＆次の質問へ
+              </Button>
+              {/* {recording ?
                   <Button
                     variant="outlined"
                     color="info"
@@ -380,38 +384,37 @@ export default function IndexPage() {
                     音声で入力
                   </Button> */}
 
-              </Grid>
-              <Grid item xs={12} sm={12}>
-                {/* {recording ?
+            </Grid>
+            <Grid item xs={12} sm={12}>
+              {/* {recording ?
                   <span>🔴録音中</span>
                   :
                   <span>🔵停止中</span>} */}
-              </Grid>
             </Grid>
+          </Grid>
 
-            <Box sx={{ padding: "4px" }}>
-              {/* ここで回答結果を表示する */}
-              {[...result].reverse().map((item, index) => {
-                return (
-                  <>
-                    <Paper sx={{ padding: "15px" }}>
-                      <ResultBox {...item} />
-                    </Paper>
-                    {/* <pre>{JSON.stringify(item, null, " ")}</pre> */}
-                  </>
-                );
-              })}
-              <hr />
+          <Box sx={{ padding: "4px" }}>
+            {/* ここで回答結果を表示する */}
+            {[...result].reverse().map((item, index) => {
+              return (
+                <>
+                  <Paper sx={{ padding: "15px" }}>
+                    <ResultBox {...item} />
+                  </Paper>
+                  {/* <pre>{JSON.stringify(item, null, " ")}</pre> */}
+                </>
+              );
+            })}
 
+            {/* 
               <Link href="/day">Day</Link>
               <hr />
-              <Link href="redux-sample">redux-sample</Link>
-            </Box>
-          </Container>
-        </Grid>
+              <Link href="redux-sample">redux-sample</Link> */}
+          </Box>
+        </Container>
+      </Grid>
 
 
-      </Paper>
     </>
   );
 }
